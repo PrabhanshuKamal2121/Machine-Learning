@@ -1,0 +1,102 @@
+00:00 - 00:35 - Introduction
+00:35 - 02:54 - Content
+02:54 - 06:52 - what is machine learning
+06:52 - 08:47 - Real life machine learning applications
+08:47 - 10:22 - Traditional programming vs machine learning
+10:22 - 14:34 - Difference b/w AI,ML,DL
+14:34 - 25:20 - Types of Machine Learning
+25:20 - 28:15 - Steps for making a machine learning model
+28:15 - 33:45 - EDA
+33:45 - 42:30 - DATA cleaning
+42:30 - 54:10- DATA Preprocessing
+54:10 - 57:58 - Feature Engineering
+57:58 - 01:01:42 - Feature Selection
+01:01:42 - 02:07:15 - Project 1
+02:07:15 - 02:42:43- Project 2
+02:42:43 - 02:43:07 -outro
+00:00:00 - 00:01:27 intro
+00:01:27 - 00:01:31 important note
+00:01:31 - 00:02:58 intro 2
+00:02:58 - 00:06:29 contents of the video
+00:06:29 - 00:12:04 what is regression
+00:12:04 - 00:38:47 linear regression
+00:38:47 - 00:46:30 cost function
+00:46:30 - 01:04:26 gradient descent
+01:04:26 - 01:10:59 repeat convergence theorem
+01:10:59 - 01:14:56 hyperplane
+01:14:56 - 01:28:46 project
+01:28:46 - 01:46:17 y_test
+01:46:17 - 01:57:37 overfitting and underfitting
+01:57:37 - 02:40:45 project 2
+02:40:45 - 02:41:17 outro
+00:00:00 - 00:01:07 Introduction
+00:01:07 - 00:01:28 Important note
+00:01:28 - 00:05:11 Structure of Video
+00:05:11 - 00:08:32 What is Classification
+00:08:32 - 00:27:27 Logistic Regression
+00:27:27 - 00:31:21 Linear regression vs Logistic regression
+00:31:21 - 00:45:11 Log Loss function
+00:45:11 - 00:56:24 Logistic Regression Implementation
+00:56:24 - 01:16:22 Model Evaluation 
+01:16:22 - 01:20:17 Model Evaluation Implementation
+01:20:17 - 01:34:04 KNN
+01:34:04 - 01:42:32 KNN Implementation 
+01:42:32 - 01:58:50 naive bayes
+01:58:50 - 02:05:38 Naive bayes Implementation
+02:05:38 - 02:34:36 Decision Trees
+02:34:36 - 02:42:41 Decision Tree implementation
+02:42:41 - 02:55:56 Basics of SVM
+02:55:56 - 03:02:15 application of SVM
+03:02:15 - 03:21:22 final project
+03:21:22 - 03:39:04 frontend
+03:39:04 - 03:39:37 outro
+00:00:00 - 00:00:55 intro
+00:01:25 - 00:03:29 contents of the video
+00:03:29 - 00:10:46 model tuning 
+00:10:46 - 00:19:02 cross validation
+00:19:02 - 00:27:12 code implementation or cross validation 
+00:27:12 - 00:33:26 hyperparameter tuning
+00:33:26 - 00:43:15 grid search cv
+00:43:15 - 01:05:12 code implementation of grid search cv
+01:05:12 - 01:09:49 random search cv
+01:09:49 - 01:14:09 random search cv implementation
+01:14:09 - 01:22:56 ensemble learning
+01:22:56 - 01:27:56 stacking 
+01:27:56 - 01:32:00 bagging 
+01:32:00 - 01:34:14 boosting 
+01:34:14 - 01:49:54 code implementation of stacking
+01:49:54 - 02:07:46 implementation of bagging
+02:07:46 - 02:17:12 implementation of boosting
+02:17:12 - 02:33:00 adaboost, gradient boost, xgboost
+02:33:00 - 02:45:31 unsupervised learning
+02:45:31 - 03:05:38 K-means clustering algorithm
+03:05:38 - 03:14:27 K-means implementation
+03:18:29 - 03:24:27 DB scan algorithm
+03:24:27 - 03:29:53 implementation of dbscan
+03:29:53 - 03:49:45 dimensionality reduction
+03:49:45 - 03:55:02 implementation of PCA for dimensionality reduction
+03:55:02 - 03:59:16 some final words
+03:59:16 - 04:00:09 outro
+What is NLP and why it's important
+
+Real-world applications of NLP
+
+Full text preprocessing pipeline
+
+Lowercasing, punctuation removal, emoji & stopword removal
+
+Difference between TF-IDF and Bag of Words
+
+Common ML techniques used in NLP
+
+Hands-on Emotion Detection Project from scratch
+
+Tools & Libraries used:
+
+Python
+
+Pandas, NLTK for text preprocessing
+
+Scikit-learn for ML models (Naive Bayes, Logistic Regression)
+
+CountVectorizer, TfidfVectorizer

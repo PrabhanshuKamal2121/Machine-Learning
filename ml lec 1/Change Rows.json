@@ -1,0 +1,1124 @@
+{
+  "name": "Change Rows",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -400,
+        215
+      ],
+      "id": "1da33489-c70e-4c86-974d-8bb9e6ed93d1",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1CBoA0gKvrxnUQaMx93kVnPsxE0FeRmAyU_A1DYxU7BA",
+          "mode": "list",
+          "cachedResultName": "Untitled spreadsheet",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1CBoA0gKvrxnUQaMx93kVnPsxE0FeRmAyU_A1DYxU7BA/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1CBoA0gKvrxnUQaMx93kVnPsxE0FeRmAyU_A1DYxU7BA/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        -180,
+        215
+      ],
+      "id": "d851026d-4fc6-4e9c-ba32-2ed7b5de431a",
+      "name": "Get row(s) in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "oFGxBnFkSe2OODUQ",
+          "name": "Google Sheets account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "gemma3:1b",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOllama",
+      "typeVersion": 1,
+      "position": [
+        340,
+        -540
+      ],
+      "id": "6e8da626-2488-402c-a2ac-b0071448b869",
+      "name": "Ollama Chat Model",
+      "credentials": {
+        "ollamaApi": {
+          "id": "QVQGv2CqCZZnc2Gt",
+          "name": "Ollama account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1CBoA0gKvrxnUQaMx93kVnPsxE0FeRmAyU_A1DYxU7BA",
+          "mode": "list",
+          "cachedResultName": "Untitled spreadsheet",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1CBoA0gKvrxnUQaMx93kVnPsxE0FeRmAyU_A1DYxU7BA/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1CBoA0gKvrxnUQaMx93kVnPsxE0FeRmAyU_A1DYxU7BA/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "number": "={{ $('Loop Over Items3').item.json.number }}",
+            "FOREIGN_PORT_CONUNTRY": "={{ $json.output }}"
+          },
+          "matchingColumns": [
+            "number"
+          ],
+          "schema": [
+            {
+              "id": "number",
+              "displayName": "number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "UNIT_VALUE_USD",
+              "displayName": "UNIT_VALUE_USD",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "FOREIGN PORT",
+              "displayName": "FOREIGN PORT",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "ORIGIN_COUNTRY",
+              "displayName": "ORIGIN_COUNTRY",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "ITEM_DESCRIPTION",
+              "displayName": "ITEM_DESCRIPTION",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "FOREIGN_PORT_CONTINENT",
+              "displayName": "FOREIGN_PORT_CONTINENT",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "FOREIGN_PORT_CONUNTRY",
+              "displayName": "FOREIGN_PORT_CONUNTRY",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "ORIGIN_CONTINENT",
+              "displayName": "ORIGIN_CONTINENT",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        840,
+        965
+      ],
+      "id": "26610b64-3a9c-4798-a7c8-9f9a0c7f1ce2",
+      "name": "Update row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "oFGxBnFkSe2OODUQ",
+          "name": "Google Sheets account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "gemma3:1b",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOllama",
+      "typeVersion": 1,
+      "position": [
+        340,
+        460
+      ],
+      "id": "94efdb40-a3ab-4316-8c1b-9a6ffe6aa97c",
+      "name": "Ollama Chat Model1",
+      "credentials": {
+        "ollamaApi": {
+          "id": "QVQGv2CqCZZnc2Gt",
+          "name": "Ollama account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "gemma3:1b",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOllama",
+      "typeVersion": 1,
+      "position": [
+        340,
+        -40
+      ],
+      "id": "47bd49d3-c999-498f-8bc6-2720bb8b89f9",
+      "name": "Ollama Chat Model2",
+      "credentials": {
+        "ollamaApi": {
+          "id": "QVQGv2CqCZZnc2Gt",
+          "name": "Ollama account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "gemma3:1b",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOllama",
+      "typeVersion": 1,
+      "position": [
+        340,
+        1060
+      ],
+      "id": "f1a8a067-4d1b-40b0-bad4-c629e4a0900b",
+      "name": "Ollama Chat Model3",
+      "credentials": {
+        "ollamaApi": {
+          "id": "QVQGv2CqCZZnc2Gt",
+          "name": "Ollama account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json['FOREIGN PORT'] }}\nGIVEN is a place and you classify that in which continent it comes under from below classes and just give the output as the name of one of the below subclasses\n\nAfrica\nAntarctica\nAsia\nAustralia\nEurope\nNorth America\nSouth America",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2,
+      "position": [
+        260,
+        -260
+      ],
+      "id": "ea233bb2-b487-4031-9c53-a419f63cd4f1",
+      "name": "Foreign_continent"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.ORIGIN_COUNTRY }}\nGIVEN is a place and you classify that in which continent it comes under from below classes and just give the output as the name of one of the below subclasses\n\nAfrica\nAntarctica\nAsia\nAustralia\nEurope\nNorth America\nSouth America",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2,
+      "position": [
+        260,
+        240
+      ],
+      "id": "1001beaf-5e9e-49b8-afa7-e7f111030e01",
+      "name": "Origin_continent"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json['FOREIGN PORT'] }}\nGIVEN is a place and you classify that in which country it comes under from below classes and just give the output as the name of one specific country it belongs to",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2,
+      "position": [
+        260,
+        840
+      ],
+      "id": "35850a2d-c8c1-42fb-979f-e7df91ec9c2f",
+      "name": "Foreign_Country"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1CBoA0gKvrxnUQaMx93kVnPsxE0FeRmAyU_A1DYxU7BA",
+          "mode": "list",
+          "cachedResultName": "Untitled spreadsheet",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1CBoA0gKvrxnUQaMx93kVnPsxE0FeRmAyU_A1DYxU7BA/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1CBoA0gKvrxnUQaMx93kVnPsxE0FeRmAyU_A1DYxU7BA/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "number": "={{ $('Loop Over Items1').item.json.number }}",
+            "FOREIGN_PORT_CONTINENT": "={{ $json.output }}"
+          },
+          "matchingColumns": [
+            "number"
+          ],
+          "schema": [
+            {
+              "id": "number",
+              "displayName": "number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "UNIT_VALUE_USD",
+              "displayName": "UNIT_VALUE_USD",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "FOREIGN PORT",
+              "displayName": "FOREIGN PORT",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "ORIGIN_COUNTRY",
+              "displayName": "ORIGIN_COUNTRY",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "ITEM_DESCRIPTION",
+              "displayName": "ITEM_DESCRIPTION",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "FOREIGN_PORT_CONTINENT",
+              "displayName": "FOREIGN_PORT_CONTINENT",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "FOREIGN_PORT_CONUNTRY",
+              "displayName": "FOREIGN_PORT_CONUNTRY",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "ORIGIN_CONTINENT",
+              "displayName": "ORIGIN_CONTINENT",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        840,
+        -35
+      ],
+      "id": "b45e1cae-53ab-476e-b4a5-7fa9714c332f",
+      "name": "Update row in sheet1",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "oFGxBnFkSe2OODUQ",
+          "name": "Google Sheets account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1CBoA0gKvrxnUQaMx93kVnPsxE0FeRmAyU_A1DYxU7BA",
+          "mode": "list",
+          "cachedResultName": "Untitled spreadsheet",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1CBoA0gKvrxnUQaMx93kVnPsxE0FeRmAyU_A1DYxU7BA/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1CBoA0gKvrxnUQaMx93kVnPsxE0FeRmAyU_A1DYxU7BA/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "number": "={{ $('Loop Over Items').item.json.number }}",
+            "ORIGIN_CONTINENT": "={{ $json.output }}"
+          },
+          "matchingColumns": [
+            "number"
+          ],
+          "schema": [
+            {
+              "id": "number",
+              "displayName": "number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "UNIT_VALUE_USD",
+              "displayName": "UNIT_VALUE_USD",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "FOREIGN PORT",
+              "displayName": "FOREIGN PORT",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "ORIGIN_COUNTRY",
+              "displayName": "ORIGIN_COUNTRY",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "ITEM_DESCRIPTION",
+              "displayName": "ITEM_DESCRIPTION",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "FOREIGN_PORT_CONTINENT",
+              "displayName": "FOREIGN_PORT_CONTINENT",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "FOREIGN_PORT_CONUNTRY",
+              "displayName": "FOREIGN_PORT_CONUNTRY",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "ORIGIN_CONTINENT",
+              "displayName": "ORIGIN_CONTINENT",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        840,
+        465
+      ],
+      "id": "2efd5d03-9af3-4db5-b37a-08f7d6bd23b7",
+      "name": "Update row in sheet2",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "oFGxBnFkSe2OODUQ",
+          "name": "Google Sheets account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1CBoA0gKvrxnUQaMx93kVnPsxE0FeRmAyU_A1DYxU7BA",
+          "mode": "list",
+          "cachedResultName": "Untitled spreadsheet",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1CBoA0gKvrxnUQaMx93kVnPsxE0FeRmAyU_A1DYxU7BA/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1CBoA0gKvrxnUQaMx93kVnPsxE0FeRmAyU_A1DYxU7BA/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "ITEM_DESCRIPTION": "={{ $json.output }}",
+            "number": "={{ $('Loop Over Items2').item.json.number }}"
+          },
+          "matchingColumns": [
+            "number"
+          ],
+          "schema": [
+            {
+              "id": "number",
+              "displayName": "number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "UNIT_VALUE_USD",
+              "displayName": "UNIT_VALUE_USD",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "FOREIGN PORT",
+              "displayName": "FOREIGN PORT",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "ORIGIN_COUNTRY",
+              "displayName": "ORIGIN_COUNTRY",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "ITEM_DESCRIPTION",
+              "displayName": "ITEM_DESCRIPTION",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "FOREIGN_PORT_CONTINENT",
+              "displayName": "FOREIGN_PORT_CONTINENT",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "FOREIGN_PORT_CONUNTRY",
+              "displayName": "FOREIGN_PORT_CONUNTRY",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "ORIGIN_CONTINENT",
+              "displayName": "ORIGIN_CONTINENT",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        840,
+        -535
+      ],
+      "id": "431aa9d1-a924-4575-aa27-d7d27b96d8e2",
+      "name": "Update row in sheet3",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "oFGxBnFkSe2OODUQ",
+          "name": "Google Sheets account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const rawOutput = $input.first().json.output;\n\nconst cleanedOutput = rawOutput\n  .replace(/<think>[\\s\\S]*?<\\/think>/gi, '') // Remove <think>...</think>\n  .replace(/\\*\\*/g, '')                      // Remove double asterisks\n  .replace(/\\*/g, '')                        // Remove single asterisks\n  .replace(/\\\\n/g, ' ')                      // Remove literal \\n (escaped newline)\n  .replace(/\\n/g, ' ')                       // Remove actual newlines\n  .replace(/\\//g, '')                        // Remove all forward slashes\n  .replace(/\"/g, '')                         // Remove double quotes\n  .replace(/'/g, '')                         // Remove single quotes\n  .replace(/-/g, ',')                        // Replace hyphens with commas\n  .replace(/\\s+/g, ' ')                      // Collapse multiple spaces\n  .trim();                                   // Trim whitespace\n\nreturn [\n  {\n    json: {\n      output: cleanedOutput\n    }\n  }\n];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        620,
+        840
+      ],
+      "id": "13e8966a-aff7-4ad1-b159-b8afb956090b",
+      "name": "Code5"
+    },
+    {
+      "parameters": {
+        "jsCode": "const rawOutput = $input.first().json.output;\n\nconst cleanedOutput = rawOutput\n  .replace(/<think>[\\s\\S]*?<\\/think>/gi, '') // Remove <think>...</think>\n  .replace(/\\*\\*/g, '')                      // Remove double asterisks\n  .replace(/\\*/g, '')                        // Remove single asterisks\n  .replace(/\\\\n/g, ' ')                      // Remove literal \\n (escaped newline)\n  .replace(/\\n/g, ' ')                       // Remove actual newlines\n  .replace(/\\//g, '')                        // Remove all forward slashes\n  .replace(/\"/g, '')                         // Remove double quotes\n  .replace(/'/g, '')                         // Remove single quotes\n  .replace(/-/g, ',')                        // Replace hyphens with commas\n  .replace(/\\s+/g, ' ')                      // Collapse multiple spaces\n  .trim();                                   // Trim whitespace\n\nreturn [\n  {\n    json: {\n      output: cleanedOutput\n    }\n  }\n];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        620,
+        -160
+      ],
+      "id": "34462f88-eb70-47a1-bcc0-269d66d13d18",
+      "name": "Code"
+    },
+    {
+      "parameters": {
+        "jsCode": "const rawOutput = $input.first().json.output;\n\nconst cleanedOutput = rawOutput\n  .replace(/<think>[\\s\\S]*?<\\/think>/gi, '') // Remove <think>...</think>\n  .replace(/\\*\\*/g, '')                      // Remove double asterisks\n  .replace(/\\*/g, '')                        // Remove single asterisks\n  .replace(/\\\\n/g, ' ')                      // Remove literal \\n (escaped newline)\n  .replace(/\\n/g, ' ')                       // Remove actual newlines\n  .replace(/\\//g, '')                        // Remove all forward slashes\n  .replace(/\"/g, '')                         // Remove double quotes\n  .replace(/'/g, '')                         // Remove single quotes\n  .replace(/-/g, ',')                        // Replace hyphens with commas\n  .replace(/\\s+/g, ' ')                      // Collapse multiple spaces\n  .trim();                                   // Trim whitespace\n\nreturn [\n  {\n    json: {\n      output: cleanedOutput\n    }\n  }\n];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        620,
+        340
+      ],
+      "id": "ab114592-5069-4e89-a1c6-69900f97393e",
+      "name": "Code6"
+    },
+    {
+      "parameters": {
+        "jsCode": "const rawOutput = $input.first().json.output;\n\nconst cleanedOutput = rawOutput\n  .replace(/<think>[\\s\\S]*?<\\/think>/gi, '') // Remove <think>...</think>\n  .replace(/\\*\\*/g, '')                      // Remove double asterisks\n  .replace(/\\*/g, '')                        // Remove single asterisks\n  .replace(/\\\\n/g, ' ')                      // Remove literal \\n (escaped newline)\n  .replace(/\\n/g, ' ')                       // Remove actual newlines\n  .replace(/\\//g, '')                        // Remove all forward slashes\n  .replace(/\"/g, '')                         // Remove double quotes\n  .replace(/'/g, '')                         // Remove single quotes\n  .replace(/-/g, ',')                        // Replace hyphens with commas\n  .replace(/\\s+/g, ' ')                      // Collapse multiple spaces\n  .trim();                                   // Trim whitespace\n\nreturn [\n  {\n    json: {\n      output: cleanedOutput\n    }\n  }\n];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        620,
+        -660
+      ],
+      "id": "9bd7ad79-851b-4964-b913-76b0c6d87e78",
+      "name": "Code7"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        40,
+        465
+      ],
+      "id": "ef0077ae-0a3f-4c65-9915-b8f7c769bb22",
+      "name": "Loop Over Items"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        40,
+        -35
+      ],
+      "id": "f210b0c3-492e-47b2-99e8-9c1d78faf8d3",
+      "name": "Loop Over Items1"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        40,
+        -535
+      ],
+      "id": "86e16353-fe5b-4c5e-9f5a-6ba33fc346bd",
+      "name": "Loop Over Items2"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        40,
+        965
+      ],
+      "id": "7d29f381-c1af-4b30-9b7d-5637948c8f5d",
+      "name": "Loop Over Items3"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.ITEM_DESCRIPTION }}\nGIVEN is a item and you classify that in which class it comes under from below classes and just give the output as the name of one of the below subclasses\n\nCeramic Glazed Wall Tiles,\nCeramic Glazed Floor Tiles,\nGlazed Vitrified Tiles (GVT),\nPorcelain Glazed Tiles,\nUnglazed Vitrified/Porcelain Tiles,\nMosaic and Decorative Tiles,\nParking/Outdoor Tiles,\nSample and Promotional Tiles",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2,
+      "position": [
+        260,
+        -760
+      ],
+      "id": "01194b4b-dc3b-447e-b133-a831106e919e",
+      "name": "Item_description"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Loop Over Items1",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Loop Over Items2",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Loop Over Items3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ollama Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Item_description",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ollama Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Origin_continent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ollama Chat Model2": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Foreign_continent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ollama Chat Model3": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Foreign_Country",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Foreign_Country": {
+      "main": [
+        [
+          {
+            "node": "Code5",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Foreign_continent": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Origin_continent": {
+      "main": [
+        [
+          {
+            "node": "Code6",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code5": {
+      "main": [
+        [
+          {
+            "node": "Update row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code7": {
+      "main": [
+        [
+          {
+            "node": "Update row in sheet3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code6": {
+      "main": [
+        [
+          {
+            "node": "Update row in sheet2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "Update row in sheet1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Origin_continent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update row in sheet2": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items1": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Foreign_continent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update row in sheet1": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items2": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Item_description",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update row in sheet3": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items3": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Foreign_Country",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update row in sheet": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Item_description": {
+      "main": [
+        [
+          {
+            "node": "Code7",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "64cfe62b-3241-4251-b3a2-1a1f3b4efd2f",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "5cc0498e4c4648fe5fcc14e1fba628e63e36e1dc801a3fe4ac7b2612c7e46c39"
+  },
+  "id": "4VZWU7XF4IpLDvlZ",
+  "tags": []
+}

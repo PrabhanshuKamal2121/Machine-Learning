@@ -1,0 +1,559 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Fractal — Minimal Analytics Dashboard (Upload + Column Fix)</title>
+
+  <!-- Plotly -->
+  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+  <!-- PapaParse -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+
+  <style>
+    :root{
+      --bg:#f2f2f2; --panel:#fbfbfb; --muted:#8d8d8d; --accent:#2aa89e;
+      --border:rgba(0,0,0,0.08); --card-radius:12px; --gap:14px;
+    }
+    html,body{height:100%;margin:0;background:var(--bg);font-family:'Inter',system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial;color:#111}
+    .app{display:grid;grid-template-columns:220px 1fr 340px;grid-template-rows:120px 1fr 240px;gap:var(--gap);height:100vh;padding:18px;box-sizing:border-box}
+    .side{grid-row:1 / span 3;padding-top:18px;border-right:1px solid var(--border);display:flex;flex-direction:column;gap:28px}
+    .brand{padding-left:18px;font-family:'Playfair Display',serif;font-size:26px;letter-spacing:1px;color:#222}
+    .navlist{margin-left:18px;color:var(--muted);font-size:13px;line-height:1.8}
+    .title{grid-column:2 / 4;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:6px 18px}
+    .title h1{font-family:'Playfair Display',serif;font-size:56px;margin:0;letter-spacing:-2px;color:#222}
+    .upload-and-file{display:flex;gap:8px;align-items:center}
+    .kpis{grid-column:2 / 3;display:flex;gap:12px;align-items:center;padding:6px 18px}
+    .kpi-card{background:var(--panel);border-radius:10px;border:1px solid var(--border);padding:14px 18px;box-shadow:0 1px 0 rgba(0,0,0,0.02);min-width:200px;flex:1;display:flex;flex-direction:column;gap:6px}
+    .kpi-label {font-size:12px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;font-weight:600;}
+    .kpi-value {font-size:28px;font-weight:700;color:#111;}
+    .right-panel{grid-column:3 / 4;padding:6px 18px;display:flex;flex-direction:column;gap:12px;align-items:stretch}
+    .panel{background:var(--panel);border-radius:var(--card-radius);border:1px solid var(--border);padding:12px;box-shadow:0 1px 0 rgba(0,0,0,0.02)}
+    .panel h3{font-family:'Playfair Display',serif;margin:6px 0 12px 0;font-size:20px;color:#222}
+    .main{grid-column:2 / 3;grid-row:2 / 3;padding:12px 18px;display:flex;flex-direction:column;gap:12px}
+    .chart-controls{display:flex;gap:10px;align-items:center}
+    .select,.btn{padding:8px 10px;border-radius:8px;border:1px solid var(--border);background:white;font-size:13px}
+    .btn{cursor:pointer;background:linear-gradient(180deg,#fff,#fbfbfb);box-shadow:0 1px 0 rgba(0,0,0,0.02)}
+    .chart-card{flex:1;min-height:360px;border-radius:10px;border:1px solid var(--border);overflow:hidden;padding:12px;background:var(--panel);display:flex;flex-direction:column}
+    .insights{grid-column:2 / 3;grid-row:3 / 4;padding:12px 18px;display:flex;flex-direction:column;gap:12px}
+    .insight-box{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:18px;min-height:180px;display:flex;flex-direction:column;justify-content:space-between}
+    .insight-text{font-family:'Playfair Display',serif;color:#222;font-size:28px;text-align:center;opacity:0.95}
+    .insight-summary{margin-top:12px;color:var(--muted);font-size:14px;line-height:1.5;padding:8px;border-radius:8px;border:1px solid rgba(0,0,0,0.04);background:#fff}
+    .warehouse{grid-column:3 / 4;grid-row:3 / 4;padding:12px 18px;display:flex;flex-direction:column;gap:12px}
+    @media (max-width:1100px){.app{grid-template-columns:200px 1fr;grid-template-rows:100px 1fr 260px}.right-panel{display:none}.title h1{font-size:40px}}
+    @media (max-width:720px){.app{grid-template-columns:1fr;grid-template-rows:auto;padding:12px}.side{display:flex;flex-direction:row;gap:12px;border-right:none;border-bottom:1px solid var(--border);padding-bottom:12px}.title{grid-column:1 / 2}.kpis{grid-column:1 / 2;flex-wrap:wrap}.insights,.main,.warehouse{grid-column:1 / 2}}
+    .muted{color:var(--muted);font-size:13px}.small{font-size:12px;color:var(--muted)}
+    #uploadStatus{font-size:13px;color:var(--muted); margin-left:6px;}
+    #fileInput{display:inline-block}
+  </style>
+</head>
+<body>
+
+<div class="app" id="app">
+  <aside class="side">
+    <div class="brand">FRACTAL</div>
+    <nav class="navlist">
+      <b>Dashboard</b>- Sales<br>- Total Revenue<br>- Conversion Rate<br>- Avg Order Value<br><br>
+      <b>Prediction</b>- Pricing<br>- Revenue<br><br>
+      <b>Fractal Chat</b>- Daily Brief
+    </nav>
+  </aside>
+
+  <div class="title">
+    <h1>DASHBOARD</h1>
+    <div class="upload-and-file">
+      <label class="small muted" for="fileInput">Upload CSV</label>
+      <input id="fileInput" type="file" accept=".csv" />
+      <button id="resetBtn" class="btn small">Reset</button>
+      <span id="uploadStatus" class="small muted">No file</span>
+    </div>
+  </div>
+
+  <div class="kpis" id="kpis"></div>
+
+  <aside class="right-panel">
+    <div class="panel">
+      <h3>Product Types</h3>
+      <div id="pieChart" style="height:220px;"></div>
+    </div>
+    <div class="panel">
+      <h3>Warehouse</h3>
+      <div style="font-size:40px;font-weight:700;"><span id="warehouseVal">—</span></div>
+      <div class="small muted">Stock (sample metric)</div>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="chart-controls">
+      <select id="colSelect" class="select"></select>
+      <select id="chartSelect" class="select"></select>
+      <button id="applyBtn" class="btn">Update Chart</button>
+      <div style="flex:1"></div>
+      <div class="small muted" id="rowsCount">Rows: —</div>
+    </div>
+
+    <div class="chart-card panel">
+      <div id="mainChart" style="height:100%; min-height:320px;"></div>
+    </div>
+  </main>
+
+  <section class="insights">
+    <div class="insight-box">
+      <div class="insight-text">ASK FRACTAL</div>
+      <div class="insight-summary" id="insightSummary">
+        Upload a CSV or use the default dataset. Insights and quick summaries will appear here automatically.
+      </div>
+    </div>
+  </section>
+
+  <section class="warehouse">
+    <div class="panel">
+      <h3>Breakdown</h3>
+      <div id="miniBreakdown" class="small muted">—</div>
+    </div>
+  </section>
+</div>
+
+<script>
+/* ========= Globals & Helpers ========= */
+const LS_KEY = 'fractal_csv_data_v1';
+const DEFAULT_CSV_PATH = 'dashboard_new.csv';
+let state = { raw:null, columns:[], schema:{} };
+
+/* ---------- CSV text pre-processor & parser ---------- */
+
+/**
+ * detectDelimiterFromLine - chooses the most likely delimiter from a line
+ * returns one of ',', ';', '\t', '|'
+ */
+function detectDelimiterFromLine(line){
+  if (!line) return ',';
+  const counts = {
+    ',': (line.match(/,/g)||[]).length,
+    ';': (line.match(/;/g)||[]).length,
+    '\t': (line.match(/\t/g)||[]).length,
+    '|': (line.match(/\|/g)||[]).length
+  };
+  // choose max
+  let best = ',', bestCount = -1;
+  Object.entries(counts).forEach(([k,v]) => { if (v > bestCount) { best = k; bestCount = v; }});
+  return best;
+}
+
+/**
+ * cleanCSVText - trims BOM, strips outer-quote wrapper around header if entire header is quoted,
+ * and detects delimiter. Returns { text, delimiter }
+ */
+function cleanCSVText(rawText){
+  let text = rawText || '';
+  // remove UTF BOM if present
+  if (text.charCodeAt(0) === 0xFEFF) text = text.slice(1);
+
+  // split lines and find first non-empty line (header)
+  const lines = text.split(/\r\n|\n|\r/);
+  let headerIndex = 0;
+  while (headerIndex < lines.length && lines[headerIndex].trim() === '') headerIndex++;
+  if (headerIndex >= lines.length) return { text, delimiter: ',' };
+
+  let headerLine = lines[headerIndex];
+
+  // If the entire header is wrapped in a single pair of double-quotes (malformed CSV case),
+  // strip that outer pair so the commas inside are seen as separators.
+  const startsWithQuote = headerLine.startsWith('"') || headerLine.startsWith("'");
+  const endsWithQuote = headerLine.endsWith('"') || headerLine.endsWith("'");
+  if (startsWithQuote && endsWithQuote) {
+    // only strip outer quotes if there is at least one delimiter char inside
+    const inner = headerLine.slice(1, -1);
+    if (inner.includes(',') || inner.includes(';') || inner.includes('\t') || inner.includes('|')) {
+      lines[headerIndex] = inner;
+      text = lines.join('\n');
+      headerLine = lines[headerIndex];
+    }
+  }
+
+  // Try to detect delimiter using header line; fallback to checking first 5 non-empty lines average
+  let delimiter = detectDelimiterFromLine(headerLine);
+  if (delimiter === ',' || delimiter === ';' || delimiter === '\t' || delimiter === '|') {
+    // good
+  } else {
+    delimiter = ',';
+  }
+
+  // If header had very few delimiters but following lines have more, prefer the other delim
+  // (check next few lines)
+  const sampleLines = [];
+  for (let i=headerIndex; i < Math.min(headerIndex+6, lines.length); i++){
+    if (lines[i].trim() !== '') sampleLines.push(lines[i]);
+  }
+  const score = { ',':0, ';':0, '\t':0, '|':0 };
+  sampleLines.forEach(l => {
+    score[','] += (l.match(/,/g)||[]).length;
+    score[';'] += (l.match(/;/g)||[]).length;
+    score['\t'] += (l.match(/\t/g)||[]).length;
+    score['|'] += (l.match(/\|/g)||[]).length;
+  });
+  // pick max if it's significantly greater than header guess
+  const maxKey = Object.entries(score).sort((a,b)=>b[1]-a[1])[0];
+  if (maxKey && maxKey[1] > 0 && maxKey[0] !== delimiter && maxKey[1] >= score[delimiter] + 1) {
+    delimiter = maxKey[0];
+  }
+
+  return { text, delimiter };
+}
+
+/**
+ * parseCSVText - returns parsed rows using PapaParse with a chosen delimiter
+ */
+function parseCSVText(text){
+  const cleaned = cleanCSVText(text);
+  return new Promise((resolve, reject) => {
+    Papa.parse(cleaned.text, {
+      header: true,
+      dynamicTyping: true,
+      skipEmptyLines: true,
+      delimiter: cleaned.delimiter,
+      transform: v => (typeof v === 'string' ? v.trim() : v),
+      complete: (res) => {
+        // filter out fully-empty rows
+        const filtered = (res.data || []).filter(row => Object.values(row).some(val => val !== null && val !== undefined && String(val).trim() !== ""));
+        resolve({ rows: filtered, meta: res.meta, errors: res.errors });
+      },
+      error: (err) => reject(err)
+    });
+  });
+}
+
+/* ---------- File parse wrapper ---------- */
+async function parseFileWithPapa(file){
+  // read text first (so we can detect delimiter & fix outer quotes)
+  const text = await file.text();
+  return parseCSVText(text);
+}
+
+/* ---------- detectSchema & helpers (unchanged) ---------- */
+function detectSchema(rows){
+  if (!rows || !rows.length) return {};
+  const cols = Object.keys(rows[0]);
+  const schema = {};
+  cols.forEach(c => {
+    let numericCount = 0, total = 0;
+    for (let i=0;i<rows.length;i++){
+      const v = rows[i][c];
+      if (v === null || v === undefined || v === '') { total++; continue; }
+      total++;
+      if (typeof v === 'number' && !isNaN(v)) numericCount++;
+      else if (!isNaN(Number(v))) numericCount++;
+    }
+    schema[c] = (numericCount / Math.max(1,total) >= 0.75) ? 'numeric' : 'categorical';
+  });
+  return schema;
+}
+
+/* ---------- LocalStorage ---------- */
+function saveStateToLocal(rows){ try { localStorage.setItem(LS_KEY, JSON.stringify(rows)); } catch(e){ console.warn('ls save failed', e); } }
+function loadStateFromLocal(){ try { const raw = localStorage.getItem(LS_KEY); if (!raw) return null; return JSON.parse(raw); } catch(e){ console.warn('ls load failed', e); return null; } }
+function clearState(){ localStorage.removeItem(LS_KEY); location.reload(); }
+
+/* ---------- Utilities ---------- */
+function countCategories(rows, col){ const counts={}; rows.forEach(r=>{ let v = r[col]; if (v===null||v===undefined||v==='') v='(empty)'; counts[v]=(counts[v]||0)+1; }); return counts; }
+function meanOf(arr){ return arr.reduce((a,b)=>a+b,0)/Math.max(1,arr.length); }
+function varianceOf(arr){ const m = meanOf(arr); return arr.reduce((s,a)=>s + Math.pow(a-m,2),0)/Math.max(1,arr.length); }
+function binArray(values, bins=4){ const out=[]; const min=Math.min(...values); const max=Math.max(...values); const width=(max-min)/bins||1; for (let b=0;b<bins;b++){ const low=min+b*width; const high=(b===bins-1)?max:(min+(b+1)*width); out.push({ label:`${low.toFixed(0)} - ${high.toFixed(0)}`, count:0 }); } values.forEach(v=>{ const idx=Math.min(Math.floor((v-min)/width), bins-1); if (idx>=0) out[idx].count++; }); return out; }
+function formatNumber(n, decimals=0){ if (isNaN(n) || n===null) return '—'; return Number(n).toLocaleString(undefined, {maximumFractionDigits: decimals}); }
+function generatePalette(n){ const base=['#2b2b2b','#6e6e6e','#9b9b9b','#cfcfcf','#e8e8e8','#b2d8d2']; const palette=[]; for (let i=0;i<n;i++) palette.push(base[i % base.length]); if (n>0) palette[0] = '#2aa89e'; return palette; }
+function accentColor(alpha=1){ return `rgba(42,168,158,${alpha})`; }
+
+/* ========= Renderers ========= */
+
+/* KPI cards */
+function renderKPIs(){
+  const kpisEl = document.getElementById('kpis');
+  kpisEl.innerHTML = '';
+  if (!state.raw || !state.raw.length) { kpisEl.innerHTML = `<div class="kpi-card">No data loaded</div>`; return; }
+
+  const rows = state.raw;
+  const numericCols = state.columns.filter(c=>state.schema[c]==='numeric');
+  const firstNum = numericCols[0];
+  const cards = [];
+  cards.push({ label:'Rows', value: rows.length.toLocaleString() });
+
+  if (firstNum){
+    const vals = rows.map(r => Number(r[firstNum]) || 0);
+    const sum = vals.reduce((a,b)=>a+b,0);
+    const avg = sum / Math.max(1, vals.length);
+    cards.push({ label:`Total ${firstNum}`, value: formatNumber(sum) });
+    cards.push({ label:`Avg ${firstNum}`, value: formatNumber(avg,2) });
+  } else {
+    const firstCat = state.columns.find(c => state.schema[c]==='categorical');
+    if (firstCat){
+      const counts = countCategories(rows, firstCat);
+      const top = Object.entries(counts).sort((a,b)=>b[1]-a[1])[0];
+      cards.push({ label:`Unique ${firstCat}`, value: Object.keys(counts).length });
+      if (top) cards.push({ label:`Top ${firstCat}`, value: `${top[0]} (${top[1]})` });
+    } else {
+      cards.push({ label:'No numeric data', value:'—' });
+      cards.push({ label:'No categorical data', value:'—' });
+    }
+  }
+
+  cards.forEach(c => {
+    const d = document.createElement('div');
+    d.className = 'kpi-card';
+    d.innerHTML = `<div class="kpi-label">${c.label}</div><div class="kpi-value">${c.value}</div>`;
+    kpisEl.appendChild(d);
+  });
+}
+
+/* Right pie/donut */
+function renderRightPie(){
+  const el = document.getElementById('pieChart');
+  el.innerHTML = '';
+  const rows = state.raw || [];
+  if (!rows.length) { el.innerHTML = '<div class="small muted">No data</div>'; return; }
+
+  let catCol = state.columns.find(c => state.schema[c]==='categorical');
+  let labels = [], values = [];
+  if (catCol){
+    const counts = countCategories(rows, catCol);
+    const entries = Object.entries(counts).sort((a,b)=>b[1]-a[1]);
+    labels = entries.map(e=>e[0]);
+    values = entries.map(e=>e[1]);
+  } else {
+    const numericCols = state.columns.filter(c=>state.schema[c]==='numeric');
+    if (!numericCols.length){ el.innerHTML = '<div class="small muted">No categorical or numeric columns</div>'; return; }
+    const col = numericCols[0];
+    const vals = rows.map(r=>Number(r[col]) || 0);
+    const bins = binArray(vals,4);
+    labels = bins.map(b=>b.label);
+    values = bins.map(b=>b.count);
+    catCol = col + ' (binned)';
+  }
+
+  const data = [{ values, labels, type:'pie', hole:0.32, textinfo:'percent+label', marker:{ colors: generatePalette(labels.length) } }];
+  const layout = { margin:{t:6,b:6,l:6,r:6}, showlegend:false, height:220 };
+  Plotly.react(el, data, layout, {displayModeBar:false, responsive:true});
+}
+
+/* Populate controls (fixed order & wiring to avoid stale values) */
+function populateControls(){
+  const colSelect = document.getElementById('colSelect');
+  const chartSelect = document.getElementById('chartSelect');
+
+  // 1) repopulate options
+  colSelect.innerHTML = '';
+  state.columns.forEach(c => {
+    const opt = document.createElement('option');
+    opt.value = c;
+    opt.textContent = c;
+    colSelect.appendChild(opt);
+  });
+
+  // 2) chart options
+  chartSelect.innerHTML = '';
+  const chartTypes = [
+    {value:'line', label:'Line'},
+    {value:'bar', label:'Bar'},
+    {value:'scatter', label:'Scatter'},
+    {value:'histogram', label:'Histogram'},
+    {value:'box', label:'Box'},
+    {value:'pie', label:'Pie/Donut'}
+  ];
+  chartTypes.forEach(ch => {
+    const o = document.createElement('option');
+    o.value = ch.value; o.textContent = ch.label;
+    chartSelect.appendChild(o);
+  });
+
+  // 3) set default selected indices BEFORE wiring events to avoid race
+  if (state.columns.length) {
+    colSelect.selectedIndex = 0;
+    chartSelect.selectedIndex = 0;
+  }
+
+  // 4) adapt chart options based on the initially selected column (no stale state)
+  if (state.columns.length) adaptChartOptionsForColumn(colSelect.value, chartSelect);
+
+  // 5) wire events -> Always read DOM values inside updateMainChart (no stale reliance)
+  colSelect.addEventListener('change', () => {
+    adaptChartOptionsForColumn(colSelect.value, chartSelect);
+    updateMainChart(); // immediate update
+  });
+  chartSelect.addEventListener('change', () => {
+    updateMainChart(); // immediate update
+  });
+
+  // 6) apply button (keeps the old explicit update capability)
+  document.getElementById('applyBtn').addEventListener('click', () => updateMainChart());
+}
+
+/* Enable/disable chart options based on column type
+   NOTE: receives chartSelect DOM so we can update selection safely */
+function adaptChartOptionsForColumn(column, chartSelectDom){
+  const type = state.schema[column];
+  const chartSelect = chartSelectDom || document.getElementById('chartSelect');
+  for (let i=0;i<chartSelect.options.length;i++){
+    const val = chartSelect.options[i].value;
+    if (type === 'numeric') {
+      chartSelect.options[i].disabled = (val === 'pie');
+    } else {
+      chartSelect.options[i].disabled = (val === 'histogram' || val === 'box' || val === 'line' || val === 'scatter');
+    }
+  }
+  // ensure the currently selected option is enabled; if not, pick the first enabled
+  if (chartSelect.options[chartSelect.selectedIndex] && chartSelect.options[chartSelect.selectedIndex].disabled) {
+    for (let i=0;i<chartSelect.options.length;i++){
+      if (!chartSelect.options[i].disabled){ chartSelect.selectedIndex = i; break; }
+    }
+  }
+}
+
+/* Main chart renderer: ALWAYS read values directly from DOM (no stale state) */
+function updateMainChart(){
+  const chartContainer = document.getElementById('mainChart');
+  const colSelect = document.getElementById('colSelect');
+  const chartSelect = document.getElementById('chartSelect');
+
+  if (!colSelect || !chartSelect) return;
+  const col = colSelect.value;
+  const chartType = chartSelect.value;
+
+  if (!col || !state.raw || !state.raw.length) {
+    chartContainer.innerHTML = '<div class="small muted">No data or no column selected</div>';
+    return;
+  }
+
+  const rows = state.raw;
+  const colType = state.schema[col];
+
+  const layout = { margin:{t:28,b:48,l:48,r:18}, height:420, transition:{duration:300,easing:'cubic-in-out'}, paper_bgcolor:'rgba(0,0,0,0)', plot_bgcolor:'rgba(0,0,0,0)' };
+  let traces = [];
+
+  if (colType === 'numeric') {
+    const vals = rows.map(r => Number(r[col]) || 0);
+    const xvals = rows.map((r,i)=>i+1);
+    switch(chartType){
+      case 'line': traces.push({ x:xvals, y:vals, mode:'lines+markers', type:'scatter', name:col, line:{width:2, color: accentColor()}, marker:{size:6} }); break;
+      case 'bar': traces.push({ x:xvals, y:vals, type:'bar', marker:{color: accentColor(0.75)} }); break;
+      case 'scatter': traces.push({ x:xvals, y:vals, mode:'markers', type:'scatter', marker:{size:8, color: accentColor()} }); break;
+      case 'histogram': traces.push({ x: vals, type:'histogram', marker:{color: accentColor()} }); break;
+      case 'box': traces.push({ y: vals, type:'box', boxpoints:'outliers', marker:{color: accentColor()} }); break;
+      default: traces.push({ x:xvals, y:vals, mode:'lines', type:'scatter', line:{color:accentColor()} });
+    }
+  } else {
+    const counts = countCategories(rows, col);
+    const entries = Object.entries(counts).sort((a,b)=>b[1]-a[1]);
+    const labels = entries.map(e=>e[0]);
+    const vals = entries.map(e=>e[1]);
+    if (chartType === 'pie') {
+      traces.push({ labels, values: vals, type:'pie', hole:0.35, textinfo:'label+percent', marker:{colors: generatePalette(labels.length)} });
+    } else {
+      traces.push({ x: labels, y: vals, type:'bar', marker:{color: accentColor()} });
+    }
+  }
+
+  Plotly.react(chartContainer, traces, layout, {responsive:true});
+  // Keep UI in sync
+  renderKPIs();
+  renderInsights();
+}
+
+/* Insights box */
+function renderInsights(){
+  const el = document.getElementById('insightSummary');
+  if (!state.raw || !state.raw.length){ el.textContent = 'No data loaded yet — upload a CSV or place dashboard_new.csv in the app folder.'; return; }
+
+  const rows = state.raw;
+  const numericCols = state.columns.filter(c=>state.schema[c]==='numeric');
+  const categoricalCols = state.columns.filter(c=>state.schema[c]==='categorical');
+
+  const summary = [];
+  summary.push(`Rows: ${rows.length.toLocaleString()}.`);
+  if (numericCols.length){
+    const variances = numericCols.map(c => ({col:c, variance: varianceOf(rows.map(r=>Number(r[c])||0))})).sort((a,b)=>b.variance-a.variance);
+    summary.push(`Top variation: ${variances[0].col} (variance ${(variances[0].variance||0).toFixed(2)}).`);
+    const averages = numericCols.map(c => ({col:c, avg: meanOf(rows.map(r=>Number(r[c])||0))})).sort((a,b)=>b.avg-a.avg).slice(0,2);
+    summary.push(`Highest averages: ${averages.map(a=>`${a.col}: ${formatNumber(a.avg,2)}`).join(' • ')}.`);
+  }
+  if (categoricalCols.length){
+    const firstCat = categoricalCols[0];
+    const counts = countCategories(rows, firstCat);
+    const ordered = Object.entries(counts).sort((a,b)=>b[1]-a[1]).slice(0,3);
+    summary.push(`In ${firstCat}, top values: ${ordered.map(o=>`${o[0]} (${o[1]})`).join(', ')}.`);
+  }
+
+  el.textContent = summary.join(' ');
+}
+
+/* Called each time a dataset is fully loaded into state.raw */
+function datasetLoaded(){
+  if (!state.raw || !state.raw.length) return;
+  state.columns = Object.keys(state.raw[0]);
+  state.schema = detectSchema(state.raw);
+  saveStateToLocal(state.raw);
+  populateControls();
+  renderKPIs();
+  renderRightPie();
+  updateMainChart();
+  renderInsights();
+  document.getElementById('rowsCount').textContent = `Rows: ${state.raw.length.toLocaleString()}`;
+  document.getElementById('miniBreakdown').textContent = state.columns.slice(0,4).join(' • ');
+  document.getElementById('warehouseVal').textContent = state.raw.length ? state.raw.length.toLocaleString() : '—';
+}
+
+/* ========= File upload wiring (robust) ========= */
+const uploadStatus = document.getElementById('uploadStatus');
+document.getElementById('fileInput').addEventListener('change', async (evt) => {
+  const f = evt.target.files[0];
+  if (!f) { uploadStatus.textContent = 'No file'; return; }
+  uploadStatus.textContent = `Parsing ${f.name}…`;
+  try {
+    const { rows, meta, errors } = await parseFileWithPapa(f);
+    if (errors && errors.length) {
+      console.warn('PapaParse errors', errors);
+      uploadStatus.textContent = `Parsed with ${errors.length} warnings`;
+    } else {
+      uploadStatus.textContent = `Loaded ${f.name}`;
+    }
+    if (!rows || !rows.length){ uploadStatus.textContent = 'No data rows found in file'; console.warn('parsed rows empty', meta); return; }
+    state.raw = rows;
+    datasetLoaded();
+  } catch (err){
+    console.error('Parse failed', err);
+    uploadStatus.textContent = 'Parse failed — check console';
+  }
+});
+
+document.getElementById('resetBtn').addEventListener('click', () => { if (confirm('Reset saved data and reload default?')) clearState(); });
+
+/* Try boot sequence: localStorage -> default CSV -> sample */
+async function loadCSVFromUrl(url){
+  try {
+    const res = await fetch(url);
+    if (!res.ok) throw new Error('not found');
+    const text = await res.text();
+    const { rows } = await parseCSVText(text);
+    return rows;
+  } catch(e){ console.warn('Load CSV failed', e); return null; }
+}
+
+(async function boot(){
+  const saved = loadStateFromLocal();
+  if (saved && saved.length) { state.raw = saved; state.columns = Object.keys(saved[0]||{}); state.schema = detectSchema(saved); datasetLoaded(); return; }
+  const loaded = await loadCSVFromUrl(DEFAULT_CSV_PATH);
+  if (loaded && loaded.length){ state.raw = loaded; datasetLoaded(); document.getElementById('uploadStatus').textContent = `Loaded default CSV`; return; }
+  const sample = [
+    {Product:'PNG', Category:'Image', Price:120.5, Sales:1200, Warehouse:24534534},
+    {Product:'JPG', Category:'Image', Price:69.99, Sales:800, Warehouse:1230000},
+    {Product:'SVG', Category:'Vector', Price:20, Sales:430, Warehouse:432000},
+    {Product:'WEBP',Category:'Image',Price:45,Sales:540,Warehouse:128000}
+  ];
+  state.raw = sample;
+  datasetLoaded();
+})();
+</script>
+</body>
+</html>
